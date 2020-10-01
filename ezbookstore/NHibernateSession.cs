@@ -17,6 +17,8 @@ namespace ezbookstore
             configuration.Configure(configurationPath);
             var bookConfigurationFile = HttpContext.Current.Server.MapPath(@"~\Mappings\Book.hbm.xml");
             configuration.AddFile(bookConfigurationFile);
+            var memberConfigurationFile = HttpContext.Current.Server.MapPath(@"~\Mappings\Member.hbm.xml");
+            configuration.AddFile(memberConfigurationFile);
             ISessionFactory sessionFactory = configuration.BuildSessionFactory();
             return sessionFactory.OpenSession();
         }
