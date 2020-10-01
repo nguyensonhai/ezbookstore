@@ -7,63 +7,63 @@ using System.Web;
 using System.Web.Mvc;
 using ezbookstore.Models;
 
+
 namespace ezbookstore.Controllers
 {
-    public class BookController : Controller
+    public class MemberController : Controller
     {
-        // GET: Book
+        // GET: Member
         public ActionResult Index()
         {
             ViewBag.Message = "Your application description page.";
-            IList<Book> books;
+            IList<Member> members;
 
             using (ISession session = NHibernateSession.OpenSession())  // Open a session to conect to the database
             {
-                books = session.Query<Book>().ToList(); //  Querying to get all the books
+                members = session.Query<Member>().ToList(); //  Querying to get all the members
             }
 
-            return View(books);
+            return View(members);
         }
-
-        // GET: Book/Details/id
+        // GET: Member/Details/id
         public ActionResult Details(int id)
         {
-            Book book = new Book();
+            Member member = new Member();
 
             using (ISession session = NHibernateSession.OpenSession())
             {
-                book = session.Query<Book>().Where(b => b.Id == id).FirstOrDefault();
+                member = session.Query<Member>().Where(b => b.Id == id).FirstOrDefault();
             }
 
-            return View(book);
+            return View(member);
         }
-
-        // GET: Book/Create
+        // GET: Member/Create
         public ActionResult Create()
         {
             return View();
         }
-
-        // POST: Book/Create
+        // POST: Member/Create
         [HttpPost]
         public ActionResult Create(FormCollection collection)
         {
             try
             {
-                Book book = new Book();     //  Creating a new instance of the Book
-                book.Id = 115;
-                book.Title = collection["Title"].ToString();
-                book.Genre = collection["Genre"].ToString();
-                book.Author = collection["Author"].ToString();
-                book.Language = collection["Language"].ToString();
-                book.Price = collection["Price"];
+                Member member = new Member();     //  Creating a new instance of the member
+                member.Id = 115;
+                member.FirstName = collection["FirstName"].ToString();
+                member.LastName = collection["LastName"].ToString();
+                member.DateOfBirth = Convert.ToDateTime(collection["DateOfBirth"].ToString()); 
+                member.Phone = int.Parse(collection["Phone"].ToString());
+                member.Email = collection["Email"];
+                member.Address = collection["Address"].ToString();
+                member.DateJoined = Convert.ToDateTime(collection["DateJoined"].ToString());
 
                 // TODO: Add insert logic here
                 using (ISession session = NHibernateSession.OpenSession())
                 {
                     using (ITransaction transaction = session.BeginTransaction())   //  Begin a transaction
                     {
-                        session.Save(book); //  Save the book in session
+                        session.Save(member); //  Save the member in session
                         transaction.Commit();   //  Commit the changes to the database
                     }
                 }
@@ -76,39 +76,41 @@ namespace ezbookstore.Controllers
             }
         }
 
-        // GET: Book/Edit/id
+        // GET: Member/Edit/id
         public ActionResult Edit(int id)
         {
-            Book book = new Book();
+            Member member = new Member();
 
             using (ISession session = NHibernateSession.OpenSession())
             {
-                book = session.Query<Book>().Where(b => b.Id == id).FirstOrDefault();
+                member = session.Query<Member>().Where(b => b.Id == id).FirstOrDefault();
             }
 
             ViewBag.SubmitAction = "Save";
-            return View(book);
+            return View(member);
         }
 
-        // POST: Book/Edit/id
+        // POST: Member/Edit/id
         [HttpPost]
         public ActionResult Edit(int id, FormCollection collection)
         {
             try
             {
-                Book book = new Book();
-                book.Id = id;
-                book.Title = collection["Title"].ToString();
-                book.Genre = collection["Genre"].ToString();
-                book.Author = collection["Author"].ToString();
-                book.Language = collection["Language"].ToString();
-                book.Price = collection["Price"];
+                Member member = new Member();     //  Creating a new instance of the member
+                member.Id = id;
+                member.FirstName = collection["FirstName"].ToString();
+                member.LastName = collection["LastName"].ToString();
+                member.DateOfBirth = Convert.ToDateTime(collection["DateOfBirth"].ToString());
+                member.Phone = int.Parse(collection["Phone"].ToString());
+                member.Email = collection["Email"];
+                member.Address = collection["Address"].ToString();
+                member.DateJoined = Convert.ToDateTime(collection["DateJoined"].ToString());
                 // TODO: Add insert logic here
                 using (ISession session = NHibernateSession.OpenSession())
                 {
                     using (ITransaction transaction = session.BeginTransaction())
                     {
-                        session.SaveOrUpdate(book);
+                        session.SaveOrUpdate(member);
                         transaction.Commit();
                     }
                 }
@@ -120,21 +122,20 @@ namespace ezbookstore.Controllers
                 return View();
             }
         }
-
-        // GET: Book/Delete/id
+        // GET: Member/Delete/id
         public ActionResult Delete(int id)
         {
             // Delete the book
-            Book book = new Book();
+            Member member = new Member();
             using (ISession session = NHibernateSession.OpenSession())
             {
-                book = session.Query<Book>().Where(b => b.Id == id).FirstOrDefault();
+                member = session.Query<Member>().Where(b => b.Id == id).FirstOrDefault();
             }
             ViewBag.SubmitAction = "Confirm delete";
-            return View("Edit", book);
+            return View("Edit", member);
         }
 
-        // POST: Book/Delete/id
+        // POST: Member/Delete/id
         [HttpPost]
         public ActionResult Delete(long id, FormCollection collection)
         {
@@ -143,11 +144,11 @@ namespace ezbookstore.Controllers
                 // TODO: Add delete logic here
                 using (ISession session = NHibernateSession.OpenSession())
                 {
-                    Book book = session.Get<Book>(id);
+                    Member member = session.Get<Member>(id);
 
                     using (ITransaction trans = session.BeginTransaction())
                     {
-                        session.Delete(book);
+                        session.Delete(member);
                         trans.Commit();
                     }
                 }
