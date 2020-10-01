@@ -76,7 +76,7 @@ namespace ezbookstore.Controllers
             }
         }
 
-        // GET: Book/Edit/5
+        // GET: Book/Edit/id
         public ActionResult Edit(int id)
         {
             Book book = new Book();
@@ -90,7 +90,7 @@ namespace ezbookstore.Controllers
             return View(book);
         }
 
-        // POST: Book/Edit/5
+        // POST: Book/Edit/id
         [HttpPost]
         public ActionResult Edit(int id, FormCollection collection)
         {
@@ -121,7 +121,7 @@ namespace ezbookstore.Controllers
             }
         }
 
-        // GET: Book/Delete/5
+        // GET: Book/Delete/id
         public ActionResult Delete(int id)
         {
             // Delete the book
@@ -134,7 +134,7 @@ namespace ezbookstore.Controllers
             return View("Edit", book);
         }
 
-        // POST: Book/Delete/5
+        // POST: Book/Delete/id
         [HttpPost]
         public ActionResult Delete(long id, FormCollection collection)
         {
