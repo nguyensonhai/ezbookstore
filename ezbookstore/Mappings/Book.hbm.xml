@@ -10,5 +10,7 @@
     <property name="Title"  />
     <property name="Author" />
     <property name="Genre" />
+    <property name="Language" />
+    <property name="Price" />
   </class>
 </hibernate-mapping>

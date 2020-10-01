@@ -55,6 +55,8 @@ namespace ezbookstore.Controllers
                 book.Title = collection["Title"].ToString();
                 book.Genre = collection["Genre"].ToString();
                 book.Author = collection["Author"].ToString();
+                book.Language = collection["Language"].ToString();
+                book.Price = collection["Price"];
 
                 // TODO: Add insert logic here
                 using (ISession session = NHibernateSession.OpenSession())
@@ -99,7 +101,8 @@ namespace ezbookstore.Controllers
                 book.Title = collection["Title"].ToString();
                 book.Genre = collection["Genre"].ToString();
                 book.Author = collection["Author"].ToString();
-
+                book.Language = collection["Language"].ToString();
+                book.Price = collection["Price"];
                 // TODO: Add insert logic here
                 using (ISession session = NHibernateSession.OpenSession())
                 {
