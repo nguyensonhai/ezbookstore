@@ -1,3 +1,6 @@
+CREATA DATABASE BookStoreDB
+USE BookStoreDB
+
 CREATE TABLE [Book] (
     [Id]          BIGINT   IDENTITY (1, 1) NOT NULL,
     [Title]       VARCHAR (50)  NULL,
@@ -7,7 +10,7 @@ CREATE TABLE [Book] (
 	[Price]       INT			NULL,
     PRIMARY KEY CLUSTERED ([Id] ASC)
 );
-
+GO
 CREATE TABLE [Member] (
     [Id]			BIGINT   IDENTITY (1, 1) NOT NULL,
     [FirstName]     VARCHAR (50)  NULL,
@@ -19,3 +22,4 @@ CREATE TABLE [Member] (
 	[DateJoined]    DATETIME	  NULL,
     PRIMARY KEY CLUSTERED ([Id] ASC)
 );
+GO
