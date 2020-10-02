@@ -11,17 +11,13 @@ namespace ezbookstore.Controllers
 {
     public class BookController : Controller
     {
+        ISession session = SingletonSession.Session;
         // GET: Book
         public ActionResult Index()
         {
             ViewBag.Message = "Your application description page.";
             IList<Book> books;
-
-            using (ISession session = NHibernateSession.OpenSession())  // Open a session to conect to the database
-            {
-                books = session.Query<Book>().ToList(); //  Querying to get all the books
-            }
-
+            books = session.Query<Book>().ToList(); //  Querying to get all the books
             return View(books);
         }
 
@@ -29,12 +25,7 @@ namespace ezbookstore.Controllers
         public ActionResult Details(int id)
         {
             Book book = new Book();
-
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                book = session.Query<Book>().Where(b => b.Id == id).FirstOrDefault();
-            }
-
+            book = session.Query<Book>().Where(b => b.Id == id).FirstOrDefault();
             return View(book);
         }
 
@@ -59,14 +50,13 @@ namespace ezbookstore.Controllers
                 book.Price = collection["Price"];
 
                 // TODO: Add insert logic here
-                using (ISession session = NHibernateSession.OpenSession())
-                {
+
                     using (ITransaction transaction = session.BeginTransaction())   //  Begin a transaction
                     {
                         session.Save(book); //  Save the book in session
                         transaction.Commit();   //  Commit the changes to the database
                     }
-                }
+                
 
                 return RedirectToAction("Index");
             }
@@ -80,12 +70,7 @@ namespace ezbookstore.Controllers
         public ActionResult Edit(int id)
         {
             Book book = new Book();
-
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                book = session.Query<Book>().Where(b => b.Id == id).FirstOrDefault();
-            }
-
+            book = session.Query<Book>().Where(b => b.Id == id).FirstOrDefault();
             ViewBag.SubmitAction = "Save";
             return View(book);
         }
@@ -97,22 +82,18 @@ namespace ezbookstore.Controllers
             try
             {
                 Book book = new Book();
-                book.Id = id;
+                book = session.Query<Book>().Where(b => b.Id == id).FirstOrDefault();
                 book.Title = collection["Title"].ToString();
                 book.Genre = collection["Genre"].ToString();
                 book.Author = collection["Author"].ToString();
                 book.Language = collection["Language"].ToString();
                 book.Price = collection["Price"];
                 // TODO: Add insert logic here
-                using (ISession session = NHibernateSession.OpenSession())
+                using (ITransaction transaction = session.BeginTransaction())
                 {
-                    using (ITransaction transaction = session.BeginTransaction())
-                    {
-                        session.SaveOrUpdate(book);
-                        transaction.Commit();
-                    }
+                    session.SaveOrUpdate(book);
+                    transaction.Commit();
                 }
-
                 return RedirectToAction("Index");
             }
             catch
@@ -126,10 +107,7 @@ namespace ezbookstore.Controllers
         {
             // Delete the book
             Book book = new Book();
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                book = session.Query<Book>().Where(b => b.Id == id).FirstOrDefault();
-            }
+            book = session.Query<Book>().Where(b => b.Id == id).FirstOrDefault();
             ViewBag.SubmitAction = "Confirm delete";
             return View("Edit", book);
         }
@@ -141,15 +119,11 @@ namespace ezbookstore.Controllers
             try
             {
                 // TODO: Add delete logic here
-                using (ISession session = NHibernateSession.OpenSession())
+                Book book = session.Get<Book>(id);
+                using (ITransaction trans = session.BeginTransaction())
                 {
-                    Book book = session.Get<Book>(id);
-
-                    using (ITransaction trans = session.BeginTransaction())
-                    {
-                        session.Delete(book);
-                        trans.Commit();
-                    }
+                    session.Delete(book);
+                    trans.Commit();
                 }
                 return RedirectToAction("Index");
             }

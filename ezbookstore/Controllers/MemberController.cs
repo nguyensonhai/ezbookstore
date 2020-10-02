@@ -12,29 +12,20 @@ namespace ezbookstore.Controllers
 {
     public class MemberController : Controller
     {
+        ISession session = SingletonSession.Session;
         // GET: Member
         public ActionResult Index()
         {
             ViewBag.Message = "Your application description page.";
             IList<Member> members;
-
-            using (ISession session = NHibernateSession.OpenSession())  // Open a session to conect to the database
-            {
-                members = session.Query<Member>().ToList(); //  Querying to get all the members
-            }
-
+             members = session.Query<Member>().ToList(); //  Querying to get all the members
             return View(members);
         }
         // GET: Member/Details/id
         public ActionResult Details(int id)
         {
             Member member = new Member();
-
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                member = session.Query<Member>().Where(b => b.Id == id).FirstOrDefault();
-            }
-
+            member = session.Query<Member>().Where(b => b.Id == id).FirstOrDefault();
             return View(member);
         }
         // GET: Member/Create
@@ -59,15 +50,11 @@ namespace ezbookstore.Controllers
                 member.DateJoined = Convert.ToDateTime(collection["DateJoined"].ToString());
 
                 // TODO: Add insert logic here
-                using (ISession session = NHibernateSession.OpenSession())
+                using (ITransaction transaction = session.BeginTransaction())   //  Begin a transaction
                 {
-                    using (ITransaction transaction = session.BeginTransaction())   //  Begin a transaction
-                    {
-                        session.Save(member); //  Save the member in session
-                        transaction.Commit();   //  Commit the changes to the database
-                    }
+                    session.Save(member); //  Save the member in session
+                    transaction.Commit();   //  Commit the changes to the database
                 }
-
                 return RedirectToAction("Index");
             }
             catch (Exception e)
@@ -80,12 +67,7 @@ namespace ezbookstore.Controllers
         public ActionResult Edit(int id)
         {
             Member member = new Member();
-
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                member = session.Query<Member>().Where(b => b.Id == id).FirstOrDefault();
-            }
-
+            member = session.Query<Member>().Where(b => b.Id == id).FirstOrDefault();
             ViewBag.SubmitAction = "Save";
             return View(member);
         }
@@ -96,8 +78,8 @@ namespace ezbookstore.Controllers
         {
             try
             {
-                Member member = new Member();     //  Creating a new instance of the member
-                member.Id = id;
+                Member member = new Member();
+                member = session.Query<Member>().Where(b => b.Id == id).FirstOrDefault();
                 member.FirstName = collection["FirstName"].ToString();
                 member.LastName = collection["LastName"].ToString();
                 member.DateOfBirth = Convert.ToDateTime(collection["DateOfBirth"].ToString());
@@ -106,15 +88,11 @@ namespace ezbookstore.Controllers
                 member.Address = collection["Address"].ToString();
                 member.DateJoined = Convert.ToDateTime(collection["DateJoined"].ToString());
                 // TODO: Add insert logic here
-                using (ISession session = NHibernateSession.OpenSession())
+                using (ITransaction transaction = session.BeginTransaction())
                 {
-                    using (ITransaction transaction = session.BeginTransaction())
-                    {
-                        session.SaveOrUpdate(member);
-                        transaction.Commit();
-                    }
+                    session.SaveOrUpdate(member);
+                    transaction.Commit();
                 }
-
                 return RedirectToAction("Index");
             }
             catch
@@ -127,10 +105,7 @@ namespace ezbookstore.Controllers
         {
             // Delete the book
             Member member = new Member();
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                member = session.Query<Member>().Where(b => b.Id == id).FirstOrDefault();
-            }
+            member = session.Query<Member>().Where(b => b.Id == id).FirstOrDefault();
             ViewBag.SubmitAction = "Confirm delete";
             return View("Edit", member);
         }
@@ -142,15 +117,11 @@ namespace ezbookstore.Controllers
             try
             {
                 // TODO: Add delete logic here
-                using (ISession session = NHibernateSession.OpenSession())
+                Member member = session.Get<Member>(id);
+                using (ITransaction trans = session.BeginTransaction())
                 {
-                    Member member = session.Get<Member>(id);
-
-                    using (ITransaction trans = session.BeginTransaction())
-                    {
-                        session.Delete(member);
-                        trans.Commit();
-                    }
+                    session.Delete(member);
+                    trans.Commit();
                 }
                 return RedirectToAction("Index");
             }

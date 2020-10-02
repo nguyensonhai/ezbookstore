@@ -85,3 +85,7 @@ D:\GitHub\ezbookstore\ezbookstore\obj\Debug\ezbookstore.csproj.CoreCompileInputs
 D:\GitHub\ezbookstore\ezbookstore\obj\Debug\ezbookstore.csproj.CopyComplete
 D:\GitHub\ezbookstore\ezbookstore\obj\Debug\ezbookstore.dll
 D:\GitHub\ezbookstore\ezbookstore\obj\Debug\ezbookstore.pdb
+D:\GitHub\ezbookstore\ezbookstore\bin\Castle.Core.dll
+D:\GitHub\ezbookstore\ezbookstore\bin\Castle.Windsor.dll
+D:\GitHub\ezbookstore\ezbookstore\bin\Castle.Core.xml
+D:\GitHub\ezbookstore\ezbookstore\bin\Castle.Windsor.xml
