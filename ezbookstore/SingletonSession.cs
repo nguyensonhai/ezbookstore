@@ -19,7 +19,7 @@ namespace ezbookstore
             {
                 if (SingletonSession.session == null)
                 {
-                    session = NHibernateSession.OpenSession();
+                    SingletonSession.session = NHibernateSession.OpenSession();
                 }
                 return SingletonSession.session;
             }
