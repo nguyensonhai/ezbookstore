@@ -103,7 +103,7 @@ namespace ezbookstore.Controllers
         // GET: Member/Delete/id
         public ActionResult Delete(int id)
         {
-            // Delete the book
+            // Delete the member
             Member member = new Member();
             member = session.Query<Member>().Where(b => b.Id == id).FirstOrDefault();
             ViewBag.SubmitAction = "Confirm delete";
